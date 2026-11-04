@@ -1,0 +1,85 @@
+[info] Log at : 2026/9/22|20:17:36|GMT+0800
+
+[info] Log at : 2026/9/22|20:17:48|GMT+0800
+
+[info] Log at : 2026/9/23|09:07:38|GMT+0800
+
+[info] Log at : 2026/9/23|09:17:51|GMT+0800
+
+[info] Log at : 2026/9/23|09:18:09|GMT+0800
+
+[info] Log at : 2026/9/23|09:18:15|GMT+0800
+
+[info] Log at : 2026/9/23|10:41:40|GMT+0800
+
+[info] project closed: Project
+[info] Log at : 2026/9/23|10:41:54|GMT+0800
+
+[info] Log at : 2026/10/8|09:14:31|GMT+0800
+
+[info] Log at : 2026/10/14|10:50:39|GMT+0800
+
+[info] Log at : 2026/10/14|11:09:34|GMT+0800
+
+[info] Log at : 2026/10/14|11:10:05|GMT+0800
+
+[info] Log at : 2026/10/15|14:15:09|GMT+0800
+
+[info] Log at : 2026/10/15|16:00:53|GMT+0800
+
+[info] Log at : 2026/10/15|16:21:31|GMT+0800
+
+[info] Log at : 2026/10/27|19:13:46|GMT+0800
+
+[info] Log at : 2026/11/4|19:14:33|GMT+0800
+
+[info] project closed: Project
+[info] Log at : 2026/11/4|19:28:15|GMT+0800
+
+[info] Log at : 2026/11/4|19:29:50|GMT+0800
+
+[info] Log at : 2026/11/4|19:33:39|GMT+0800
+
+[SyntaxError: Unexpected token '﻿', "﻿{
+    "c"... is not valid JSON
+	at JSON.parse (<anonymous>)
+	at F.updateCppProperties (c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:10849)
+	at F.<anonymous> (c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:12579)
+	at Generator.next (<anonymous>)
+	at c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4480
+	at new Promise (<anonymous>)
+	at r (c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4225)
+	at F.load (c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:11310)
+	at w.<anonymous> (c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:8737)
+	at Generator.next (<anonymous>)
+	at a (c:\Users\Lenovo\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4282)]
+[info] Log at : 2026/11/4|19:33:58|GMT+0800
+
+[info] Log at : 2026/11/4|19:34:56|GMT+0800
+
+[info] Log at : 2026/11/4|19:35:54|GMT+0800
+
+[info] Log at : 2026/11/4|19:37:00|GMT+0800
+
+[info] Log at : 2026/11/4|19:41:55|GMT+0800
+
+[info] Log at : 2026/11/4|19:43:10|GMT+0800
+
+[info] Log at : 2026/11/4|19:43:16|GMT+0800
+
+[info] Log at : 2026/11/4|19:46:51|GMT+0800
+
+[info] Log at : 2026/11/4|19:46:59|GMT+0800
+
+[info] Log at : 2026/11/4|19:49:23|GMT+0800
+
+[info] Log at : 2026/11/4|19:51:40|GMT+0800
+
+[info] Log at : 2026/11/4|19:51:54|GMT+0800
+
+[info] Log at : 2026/11/4|19:58:09|GMT+0800
+
+[info] Log at : 2026/11/4|20:26:37|GMT+0800
+
+[info] Log at : 2026/11/4|20:46:44|GMT+0800
+

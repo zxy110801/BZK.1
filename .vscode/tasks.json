@@ -1,0 +1,113 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Keil: 编译",
+            "detail": "调用 UV4.exe -b 增量编译，等价于 Keil 里按 F7",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}\\.vscode\\keil-build.ps1",
+                "-Target", "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": [
+                    {
+                        "regexp": "^\\s*(.+?)\\((\\d+)\\)\\s*:\\s*(warning|error|fatal error)\\s*:\\s*(?:#[^:]*:\\s*)?(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    },
+                    {
+                        "regexp": "^\\s*(.+?\\.(?:axf|o|obj))\\s*:\\s*(error|warning)\\s*:\\s*(?:[LA]\\d+[A-Z]?\\s*:\\s*)?(.*)$",
+                        "file": 1,
+                        "severity": 2,
+                        "message": 3
+                    }
+                ]
+            }
+        },
+        {
+            "label": "Keil: 全部重新编译",
+            "detail": "调用 UV4.exe -r，等价于 Keil 里 Rebuild all target files",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}\\.vscode\\keil-build.ps1",
+                "-Target", "rebuild"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "group": "build",
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": [
+                    {
+                        "regexp": "^\\s*(.+?)\\((\\d+)\\)\\s*:\\s*(warning|error|fatal error)\\s*:\\s*(?:#[^:]*:\\s*)?(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    },
+                    {
+                        "regexp": "^\\s*(.+?\\.(?:axf|o|obj))\\s*:\\s*(error|warning)\\s*:\\s*(?:[LA]\\d+[A-Z]?\\s*:\\s*)?(.*)$",
+                        "file": 1,
+                        "severity": 2,
+                        "message": 3
+                    }
+                ]
+            }
+        },
+        {
+            "label": "Keil: 下载到芯片 (ST-Link)",
+            "detail": "先编译，再调用 UV4.exe -f 通过 Keil 里配置的 ST-Link 烧录",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}\\.vscode\\keil-build.ps1",
+                "-Target", "flash"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "dependsOn": "Keil: 编译",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,84 @@
+#include "Delay.h"
+
+void Delay_us(uint32_t us)
+{
+	while (us--)
+	{
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+	}
+}
+void Delay_ms(uint32_t ms)
+{
+	Delay_us(ms * 1000);
+}

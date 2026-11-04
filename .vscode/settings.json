@@ -1,0 +1,55 @@
+{
+    // ===== Keil 联动：告诉 Keil Assistant 插件 UV4.exe 在哪 =====
+    "KeilAssistant.MDK.Uv4Path": "E:\\1Ruanjian\\ARM_keil\\UV4\\UV4.exe",
+
+    // ===== C/C++：跳转、补全、报错 =====
+    "C_Cpp.default.intelliSenseMode": "windows-gcc-arm",
+    "C_Cpp.default.cStandard": "c99",
+    "C_Cpp.default.cppStandard": "c++11",
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.autocompleteAddParentheses": true,
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+
+    // F12 遇到多个同名定义时直接跳转，不弹候选框
+    "editor.gotoLocation.multipleDefinitions": "goto",
+    "editor.gotoLocation.multipleDeclarations": "goto",
+    "editor.gotoLocation.multipleImplementations": "goto",
+
+    // ===== 编码：默认按 GB2312 打开/保存（与 Keil 中文注释一致）=====
+    "files.encoding": "gb2312",
+    "files.autoGuessEncoding": true,
+    "files.associations": {
+        "*.uvprojx": "xml",
+        "*.uvoptx": "xml",
+        "*.sct": "plaintext",
+        "*.map": "plaintext",
+        "*.lst": "plaintext"
+    },
+
+    // ===== 资源管理器 / 搜索：少看噪音文件 =====
+    "files.exclude": {
+        "**/*.uvguix.*": true
+    },
+    "search.exclude": {
+        "**/Objects": true,
+        "**/Listings": true,
+        "**/*.map": true,
+        "**/*.lst": true
+    },
+    "explorer.compactFolders": false,
+
+    // ===== 编辑器手感：Keil 工程习惯用 Tab 缩进 4 格 =====
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false,
+    "editor.renderWhitespace": "selection",
+    "editor.rulers": [100],
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.indentation": true,
+
+    // ===== 以下两条是 Trae 的历史设置，保留不影响 VS Code =====
+    "trae.tab.enableRename": false,
+    "trae.tab.enableAutoImport": false
+}

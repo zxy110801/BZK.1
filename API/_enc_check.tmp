@@ -1,0 +1,145 @@
+#include "TIM8_sr04.h"
+
+/*
+	超声波 HC-SR04 引脚分配（输入捕获测距）:
+	PC9  TIM8_CH4  Trig  触发端（TIM8 的 PWM 自动输出触发脉冲，不需要软件拉高拉低）
+	PA8  TIM1_CH1  Echo  回波端（CH1 捕获上升沿，CH2 捕获下降沿）
+*/
+void TIM8_SR04_Init(void)
+{
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOC,ENABLE);
+
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	/* ---------- 触发部分：TIM8 通道4 输出 PWM 到 PC9 ---------- */
+
+	//PC9 配置为复用推挽，交给 TIM8_CH4 输出 PWM
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOC,&GPIO_InitStructure);
+
+	//TIM8 时基：72MHz / 72 = 1MHz 计数，ARR=65535，即每 65.5ms 触发一次
+	//注意：ARR 必须和下面 TIM1 的保持一致，两者相位才固定，超时判断才准确
+	TIM_TimeBaseInitTypeDef TIM8_Init;
+	TIM8_Init.TIM_ClockDivision = TIM_CKD_DIV1;
+	TIM8_Init.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM8_Init.TIM_Period = 65535 - 1;
+	TIM8_Init.TIM_Prescaler = 72 - 1;
+	TIM8_Init.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(TIM8,&TIM8_Init);
+
+	//TIM8 通道4：PWM1 模式，CCR=20，即每个周期前 20us 输出高电平（满足 Trig 大于 10us 的要求）
+	TIM_OCInitTypeDef TIM_OCInitStructure;
+	TIM_OCStructInit(&TIM_OCInitStructure);	//先赋默认值，防止结构体成员漏配
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_Pulse = 20;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OC4Init(TIM8, &TIM_OCInitStructure);
+
+	//TIM8 是高级定时器，必须使能主输出 MOE，否则引脚上没有波形
+	TIM_CtrlPWMOutputs(TIM8,ENABLE);
+	TIM_Cmd(TIM8, ENABLE);
+
+
+	/* ---------- 输入捕获部分：TIM1 通道1/2 测 Echo 高电平时间 ---------- */
+
+	//PA8 配置为上拉输入，接 Echo
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+	GPIO_Init(GPIOA,&GPIO_InitStructure);
+
+	//TIM1 时基：1MHz 计数，65.5ms 溢出一次，自由跑用来计超时
+	TIM_TimeBaseInitTypeDef TIM1_InitStructure;
+	TIM1_InitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+	TIM1_InitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM1_InitStructure.TIM_Period = 65535 - 1;
+	TIM1_InitStructure.TIM_Prescaler = 72 - 1;
+	TIM1_InitStructure.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(TIM1 , &TIM1_InitStructure);
+	TIM_ClearITPendingBit(TIM1, TIM_IT_Update);	//清除初始化强制更新事件产生的标志位，防止一使能中断就误进入
+
+	TIM_ICInitTypeDef TIM1_ICInitStructure;
+	TIM1_ICInitStructure.TIM_Channel = TIM_Channel_1;
+	TIM1_ICInitStructure.TIM_ICFilter = 0x03;
+	TIM1_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+	TIM1_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+	TIM1_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+	TIM_PWMIConfig(TIM1,&TIM1_ICInitStructure);	//PWM 输入模式：CH1 上升沿、CH2 下降沿都捕获 PA8，只需配置一次
+
+	TIM_CCxCmd(TIM1,TIM_Channel_1,TIM_CCx_Enable);
+	TIM_CCxCmd(TIM1,TIM_Channel_2,TIM_CCx_Enable);
+
+	//使能捕获比较中断和更新中断
+	TIM_ITConfig(TIM1,TIM_IT_CC1,ENABLE);
+	TIM_ITConfig(TIM1,TIM_IT_CC2,ENABLE);
+	TIM_ITConfig(TIM1,TIM_IT_Update,ENABLE);
+
+	NVIC_InitTypeDef NVIC_ICInitStructure;
+	//TIM1 捕获比较中断
+	NVIC_ICInitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;
+	NVIC_ICInitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_ICInitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_ICInitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_Init(&NVIC_ICInitStructure);
+	//TIM1 更新中断
+	NVIC_ICInitStructure.NVIC_IRQChannel = TIM1_UP_IRQn;
+	NVIC_ICInitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_ICInitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_ICInitStructure.NVIC_IRQChannelSubPriority = 2;
+	NVIC_Init(&NVIC_ICInitStructure);
+
+	TIM_Cmd(TIM1,ENABLE);
+}
+
+
+
+/* PWM 已由 TIM8 周期性自动输出触发脉冲，本函数不再使用，保留空壳（可删除） */
+void HC_SR04_Trig(void)
+{
+}
+
+u16 HC_SR04_Start = 0;				//上升沿时刻的计数值
+volatile u32 HC_SR04_Over = 0;		//Echo 高电平持续时间 = 下降沿 - 上升沿
+volatile u8 HC_SR04_OverFlag = 0;	//1：本周期测距完成  2：整个周期无回波（超时）
+u8 HC_SR04_StartFlag = 0;			//1：已捕获上升沿，正在等待下降沿
+volatile u8 HC_SR04_Measured = 1;	//1：上个触发周期完成了有效测量（初值 1 防止开机第一周期误报超时）
+
+void TIM1_CC_IRQHandler(void)	//TIM1 捕获比较中断
+{
+	if(TIM_GetITStatus(TIM1,TIM_IT_CC1))	//CH1 上升沿中断
+	{
+		TIM_ClearITPendingBit(TIM1,TIM_IT_CC1);
+		HC_SR04_Start = TIM_GetCapture1(TIM1);	//记录上升沿时刻
+		HC_SR04_StartFlag = 1;
+	}
+	if(TIM_GetITStatus(TIM1,TIM_IT_CC2))	//CH2 下降沿中断
+	{
+		TIM_ClearITPendingBit(TIM1,TIM_IT_CC2);
+		if(HC_SR04_StartFlag == 1)
+		{
+			HC_SR04_Over = TIM_GetCapture2(TIM1) - HC_SR04_Start;	//高电平时间 = 下降沿 - 上升沿
+			HC_SR04_OverFlag = 1;
+			HC_SR04_Measured = 1;	//标记本触发周期测量完成
+			HC_SR04_StartFlag = 0;
+		}
+
+	}
+}
+void TIM1_UP_IRQHandler(void)	//TIM1 更新中断：每个触发周期开始时检查上一周期是否测到回波
+{
+	if(TIM_GetITStatus(TIM1,TIM_IT_Update))
+	{
+		TIM_ClearITPendingBit(TIM1,TIM_IT_Update);
+		if(HC_SR04_Measured == 1)	//上个周期有有效测量，清标志等待本周期
+		{
+			HC_SR04_Measured = 0;
+		}
+		else	//整个周期都没有下降沿，说明无回波，判定超时
+		{
+			HC_SR04_StartFlag = 0;
+			HC_SR04_OverFlag = 2;
+		}
+	}
+}
