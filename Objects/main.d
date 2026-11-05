@@ -47,3 +47,5 @@
 .\objects\main.o: .\API\sys\sys.h
 .\objects\main.o: .\API\LCD\lcd_init.h
 .\objects\main.o: .\API\LCD\pic.h
+.\objects\main.o: .\API\I2C\AT24C02.h
+.\objects\main.o: .\API\I2C\i2c.h

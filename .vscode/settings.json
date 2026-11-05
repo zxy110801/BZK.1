@@ -51,5 +51,6 @@
 
     // ===== 以下两条是 Trae 的历史设置，保留不影响 VS Code =====
     "trae.tab.enableRename": false,
-    "trae.tab.enableAutoImport": false
+	"trae.tab.enableAutoImport": false,
+	"commentTranslate.source": "Bing"
 }

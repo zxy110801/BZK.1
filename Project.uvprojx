@@ -798,6 +798,16 @@
               <FileType>5</FileType>
               <FilePath>.\API\I2C\I2C.h</FilePath>
             </File>
+            <File>
+              <FileName>AT24C02.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\API\I2C\AT24C02.c</FilePath>
+            </File>
+            <File>
+              <FileName>AT24C02.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\API\I2C\AT24C02.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
